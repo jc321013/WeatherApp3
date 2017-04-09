@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         txtHumidity = (TextView) findViewById(R.id.txtHumidity);
         txtTime = (TextView) findViewById(R.id.txtTime);
         txtCelsius = (TextView) findViewById(R.id.txtCelsius);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
 
         //Get Coordinates
@@ -54,29 +55,70 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-           ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                   Manifest.permission.INTERNET,
-                   Manifest.permission.ACCESS_COARSE_LOCATION,
-                   Manifest.permission.ACCESS_FINE_LOCATION,
-                   Manifest.permission.ACCESS_NETWORK_STATE,
-                   Manifest.permission.SYSTEM_ALERT_WINDOW,
-                   Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.SYSTEM_ALERT_WINDOW,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
 
 
-
-
-
-                   }, MY_PERMISSION);
+            }, MY_PERMISSION);
 
 
         }
         Location location = locationManager.getLastKnownLocation(provider);
-        if(location == null)
+        if (location == null)
             LOG.e("TAG", "No Location");
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.SYSTEM_ALERT_WINDOW,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+
+            }, MY_PERMISSION);
+
+
+        }
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                        Manifest.permission.INTERNET,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.SYSTEM_ALERT_WINDOW,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+                }, MY_PERMISSION);
+
+
+            }
+        }
+        locationManager.requestLocationUpdates(provider, 400, 1, this);
+    }
+
+    @Override
     public void onLocationChanged(Location location) {
+        
 
     }
 
