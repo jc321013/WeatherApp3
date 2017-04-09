@@ -15,13 +15,15 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.jc321013.weatherapp.Common.Common;
 import com.example.jc321013.weatherapp.Helper.Helper;
 import com.example.jc321013.weatherapp.Model.OpenWeatherMap;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
+import java.lang.reflect.Type;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.INTERNET;
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
@@ -168,6 +170,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if(s.contains("Error: Not found city")){
+                pd.dismiss();
+                return;
+            }
+            Gson gson = new Gson();
+            Type nType = new TypeToken<OpenWeatherMap>(){}.getType();
+            openWeatherMap = gson.fromJson(s,nType);
+            pd.dismiss();
+
+            txtCity.setText(String.format("%s, %s", openWeatherMap.getName(),openWeatherMap.getSys().getCountry()));
+            txtLastUpdate.setText(String.format("Last Updated: %s", Common.getDateNow()));
+            txtDescription.setText(String.format("%s", openWeatherMap.getWeatherList().get(0).getDescription()));
+            txtHumidity.setText(String.format("%d%%", openWeatherMap.getMain().getHumidity()));
+            txtTime.setText(String.format("%s/%s", Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunrise()),Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunset())));
+            txtCelsius.setText(String.format("%.2f °C", openWeatherMap.getMain().getTemp()));
+            Picasso.with(MainActivity.this)
+                    .load(Common.getImage(openWeatherMap.getWeatherList().get(0).getIcon()))
+                    .into(imageView);
+
+
         }
 
     }
