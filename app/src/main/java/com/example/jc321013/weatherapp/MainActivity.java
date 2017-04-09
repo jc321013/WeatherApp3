@@ -1,18 +1,21 @@
 package com.example.jc321013.weatherapp;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.jc321013.weatherapp.Helper.Helper;
 import com.example.jc321013.weatherapp.Model.OpenWeatherMap;
 
 import org.w3c.dom.Text;
@@ -118,7 +121,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-        
+        lat = location.getLatitude();
+        lng = location.getLongitude();
+
+
 
     }
 
@@ -134,6 +140,35 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onProviderDisabled(String provider) {
+
+    }
+
+    private class GetWeather extends AsyncTask<String,Void,String>{
+        ProgressDialog pd = new ProgressDialog(MainActivity.this);
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.setTitle("Please wait....");
+            pd.show();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            String stream = null;
+            String urlString = params[0];
+            Helper http =  new Helper();
+            stream = http.getHTTpData(urlString);
+            return stream;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
 
     }
 }
