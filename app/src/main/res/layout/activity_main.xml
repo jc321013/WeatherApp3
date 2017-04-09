@@ -34,10 +34,10 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/ImageView"
+        android:id="@+id/imageView"
         android:layout_gravity="center"
 
-        />
+        android:contentDescription="" />
 
     <TextView
         android:id="@+id/txtDescription"

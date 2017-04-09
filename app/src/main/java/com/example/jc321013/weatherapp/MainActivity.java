@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
         Location location = locationManager.getLastKnownLocation(provider);
         if (location == null)
-            LOG.e("TAG", "No Location");
+            Log.e("TAG", "No Location");
     }
 
     @Override
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lat = location.getLatitude();
         lng = location.getLongitude();
 
-
+        new GetWeather().execute(Common.apiRequest(String.valueOf(lat), String.valueOf(lng)));
 
     }
 
